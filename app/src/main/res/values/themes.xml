@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AndroidShareScreen" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.AndroidShareScreen" parent="Base.Theme.AndroidShareScreen" />
+    <style name="CardViewColor2">
+        <item name="android:backgroundTint">#C30000</item>
+    </style>
+</resources>
