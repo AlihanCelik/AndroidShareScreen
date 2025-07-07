@@ -23,8 +23,9 @@ class LoginActivity : AppCompatActivity() {
         binding.loginBtn.setOnClickListener{
             if(binding.username.text.toString().isNotEmpty()){
                 val intent= Intent(this,MainActivity::class.java)
-                startActivity(intent)
                 intent.putExtra("username",binding.username.text.toString())
+                startActivity(intent)
+
 
             }
         }

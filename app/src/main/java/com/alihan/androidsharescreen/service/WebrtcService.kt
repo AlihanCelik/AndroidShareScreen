@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.alihan.androidsharescreen.R
 import com.alihan.androidsharescreen.repository.MainRepository
@@ -72,13 +73,14 @@ class WebrtcService @Inject constructor() : Service(), MainRepository.Listener {
                 // Ekran paylaşımı başlatma işlemi (kullanıcı başlatır)
                 "RequestConnectionIntent" -> {
                     val target = intent.getStringExtra("target")
-                    target?.let {
-                        // Önce ekran paylaşımı izni aktarılır
+                    if (target != null && surfaceView != null && screenPermissionIntent != null) {
                         mainRepository.setPermissionIntentToWebrtcClient(screenPermissionIntent!!)
-                        // Ekran paylaşımı başlatılır
                         mainRepository.startScreenCapturing(surfaceView!!)
-                        // Karşı tarafa bağlantı başlatma isteği gönderilir
-                        mainRepository.sendScreenShareConnection(it)
+                        mainRepository.sendScreenShareConnection(target)
+                    } else {
+                        // Hatalı kullanım, logla ve servisi durdur
+                        Log.e("WebrtcService", "HATA: surfaceView veya screenPermissionIntent null.")
+                        stopMyService()
                     }
                 }
             }

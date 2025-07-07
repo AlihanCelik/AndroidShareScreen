@@ -12,20 +12,21 @@ import com.alihan.androidsharescreen.databinding.ActivityMainBinding
 import com.alihan.androidsharescreen.repository.MainRepository
 import com.alihan.androidsharescreen.service.WebrtcService
 import com.alihan.androidsharescreen.service.WebrtcServiceRepository
+import dagger.hilt.android.AndroidEntryPoint
 import org.webrtc.MediaStream
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainRepository.Listener {
     lateinit var binding: ActivityMainBinding
     private var username:String?=null
 
-    @Inject lateinit var WebrtcServiceRepository: WebrtcServiceRepository
+    @Inject lateinit var webrtcServiceRepository: WebrtcServiceRepository
     private val capturePermissionRequestCode = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
         binding=ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity(), MainRepository.Listener {
         }
         WebrtcService.surfaceView = binding.surfaceView
         WebrtcService.listener = this
-        WebrtcServiceRepository.startIntent(username!!)
+        webrtcServiceRepository.startIntent(username!!)
         binding.requestBtn.setOnClickListener {
             startScreenCapture()
         }
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(), MainRepository.Listener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode != capturePermissionRequestCode) return
         WebrtcService.screenPermissionIntent = data
-        WebrtcServiceRepository.requestConnection(
+        webrtcServiceRepository.requestConnection(
             binding.username.text.toString()
         )
     }
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity(), MainRepository.Listener {
                 requestTitle.text = "$target is requesting for connection"
                 requestly.isVisible = true
                 requestaccept.setOnClickListener {
-                    WebrtcServiceRepository.acceptCAll(target)
+                    webrtcServiceRepository.acceptCAll(target)
                     requestly.isVisible = false
                 }
                 reguestdecline.setOnClickListener {
@@ -85,10 +86,10 @@ class MainActivity : AppCompatActivity(), MainRepository.Listener {
     override fun onConnectionConnected() {
         runOnUiThread {
             binding.apply {
-                requestly.isVisible = false
+                ll1.isVisible = false
                 disconnect.isVisible = true
                 disconnect.setOnClickListener {
-                    WebrtcServiceRepository.endCallIntent()
+                    webrtcServiceRepository.endCallIntent()
                     restartUi()
                 }
             }
@@ -111,7 +112,7 @@ class MainActivity : AppCompatActivity(), MainRepository.Listener {
     private fun restartUi(){
         binding.apply {
             disconnect.isVisible=false
-            disconnect.isVisible = true
+            ll1.isVisible = true
             requestly.isVisible = false
             surfaceView.isVisible = false
         }
